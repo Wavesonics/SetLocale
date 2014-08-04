@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Set Locale</string>
+    <string name="title_section_locale_list">Locales</string>
+    <string name="title_section_favorite_locales">Favorites</string>
+    <string name="action_settings">Settings</string>
+    <string name="permission_dialog_title">Action Required</string>
+    <string name="permission_dialog_message">&lt;i&gt;This app is intended only for Developers.&lt;/i&gt;&lt;br/&gt;&lt;br/&gt;
+		                                 Since Android 4.2 (API 17), the CHANGE_CONFIGURATION permission has been locked down. You must manually grant this app the permissions by executing the following commands:&lt;br/&gt;&lt;br/&gt;
+		                                 1) adb shell&lt;br/&gt;
+		                                 2) pm grant com.darkrockstudios.apps.setlocale android.permission.CHANGE_CONFIGURATION</string>
+    <string name="permission_dialog_button">OK</string>
+    <string name="SELECT_search_hint">Search Locales</string>
+    <string name="toast_locale_set">Locale set</string>
+
+    <string name="toast_locale_favorite_added">Added locale to favorites</string>
+    <string name="toast_locale_favorite_removed">Removed locale from favorites</string>
+
+    <string name="empty_favorites">Long press on a Locale to add it to your favorites</string>
+</resources>
