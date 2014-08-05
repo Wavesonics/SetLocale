@@ -1,1 +1,5 @@
 /build
+*.dp
+*.keystore
+gradle.properties
+*.iml

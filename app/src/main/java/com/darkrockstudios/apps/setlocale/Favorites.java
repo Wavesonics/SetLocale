@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import org.apache.commons.lang3.LocaleUtils;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,7 +21,7 @@ public class Favorites
 
 	private static SharedPreferences getStorage( final Context context )
 	{
-		return PreferenceManager.getDefaultSharedPreferences( context );
+		return PreferenceManager.getDefaultSharedPreferences( context.getApplicationContext() );
 	}
 
 	public static void addFavorite( final Locale locale, final Context context )
@@ -27,7 +29,7 @@ public class Favorites
 		final SharedPreferences prefs = getStorage( context );
 
 		final Set<String> favorites = prefs.getStringSet( KEY_FAVORITES, new HashSet<String>() );
-		favorites.add( locale.toString().toLowerCase( Locale.US ) );
+		favorites.add( locale.toString() );
 		prefs.edit().putStringSet( KEY_FAVORITES, favorites ).commit();
 	}
 
@@ -36,7 +38,7 @@ public class Favorites
 		final SharedPreferences prefs = getStorage( context );
 
 		final Set<String> favorites = prefs.getStringSet( KEY_FAVORITES, new HashSet<String>() );
-		favorites.remove( locale.toString().toLowerCase( Locale.US ) );
+		favorites.remove( locale.toString() );
 		prefs.edit().putStringSet( KEY_FAVORITES, favorites ).commit();
 	}
 
@@ -49,7 +51,7 @@ public class Favorites
 
 		for( final String favoritesString : favoritesStrings )
 		{
-			final Locale locale = new Locale( favoritesString );
+			final Locale locale = LocaleUtils.toLocale( favoritesString );
 			favorites.add( locale );
 		}
 
