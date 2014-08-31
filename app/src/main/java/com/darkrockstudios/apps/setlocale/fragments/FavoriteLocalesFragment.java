@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.colintmiller.simplenosql.NoSQLEntity;
+import com.colintmiller.simplenosql.RetrievalCallback;
 import com.darkrockstudios.apps.setlocale.BusProvider;
 import com.darkrockstudios.apps.setlocale.Favorites;
 import com.darkrockstudios.apps.setlocale.FavoritesUpdateEvent;
@@ -16,6 +18,7 @@ import com.darkrockstudios.apps.setlocale.R;
 import com.darkrockstudios.apps.setlocale.adapters.FavoritesAdapter;
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,7 +30,9 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 /**
  * Created by Adam on 8/3/2014.
  */
-public class FavoriteLocalesFragment extends Fragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener
+public class FavoriteLocalesFragment extends Fragment implements AdapterView.OnItemClickListener,
+                                                                 AdapterView.OnItemLongClickListener,
+                                                                 RetrievalCallback<Locale>
 {
 	private FavoritesAdapter m_adapter;
 
@@ -40,20 +45,12 @@ public class FavoriteLocalesFragment extends Fragment implements AdapterView.OnI
 	}
 
 	@Override
-	public void onCreate( final Bundle savedInstanceState )
-	{
-		super.onCreate( savedInstanceState );
-
-		final List<Locale> favorites = Favorites.getFavorites( getActivity() );
-		m_adapter = new FavoritesAdapter( getActivity(), favorites.toArray( new Locale[ favorites.size() ] ) );
-	}
-
-	@Override
 	public void onResume()
 	{
 		super.onResume();
 
 		BusProvider.bus.register( this );
+		Favorites.getFavorites( getActivity(), this );
 	}
 
 	@Override
@@ -70,9 +67,13 @@ public class FavoriteLocalesFragment extends Fragment implements AdapterView.OnI
 		View rootView = inflater.inflate( R.layout.fragment_favorite_locales, container, false );
 		ButterKnife.inject( this, rootView );
 
-		m_localeListView.setAdapter( m_adapter );
 		m_localeListView.setOnItemClickListener( this );
 		m_localeListView.setOnItemLongClickListener( this );
+
+		if( m_adapter != null )
+		{
+			m_localeListView.setAdapter( m_adapter );
+		}
 
 		return rootView;
 	}
@@ -94,7 +95,7 @@ public class FavoriteLocalesFragment extends Fragment implements AdapterView.OnI
 		Favorites.removeFavorite( locale, getActivity() );
 		Crouton.makeText( getActivity(), R.string.toast_locale_favorite_removed, Style.ALERT ).show();
 
-		m_adapter.setLocales( Favorites.getFavorites( getActivity() ) );
+		Favorites.getFavorites( getActivity(), this );
 
 		return true;
 	}
@@ -102,7 +103,40 @@ public class FavoriteLocalesFragment extends Fragment implements AdapterView.OnI
 	@Subscribe
 	public void onFavoritesUpdate( final FavoritesUpdateEvent event )
 	{
-		m_adapter.setLocales( Favorites.getFavorites( getActivity() ) );
+		if( isAdded() )
+		{
+			Favorites.getFavorites( getActivity(), this );
+		}
+	}
+
+	@Override
+	public void retrievedResults( final List<NoSQLEntity<Locale>> noSQLEntities )
+	{
+		if( isAdded() )
+		{
+			final List<Locale> favorites = new ArrayList<>();
+			for( final NoSQLEntity<Locale> favoriteEntry : noSQLEntities )
+			{
+				favorites.add( favoriteEntry.getData() );
+			}
+			setLocales( favorites );
+		}
+	}
+
+	private void setLocales( final List<Locale> favorites )
+	{
+		if( m_adapter == null )
+		{
+			m_adapter = new FavoritesAdapter( getActivity(), favorites.toArray( new Locale[ favorites.size() ] ) );
+			if( m_localeListView != null )
+			{
+				m_localeListView.setAdapter( m_adapter );
+			}
+		}
+		else
+		{
+			m_adapter.setLocales( favorites );
+		}
 		m_adapter.notifyDataSetChanged();
 	}
 }

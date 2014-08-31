@@ -1,60 +1,40 @@
 package com.darkrockstudios.apps.setlocale;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
-import org.apache.commons.lang3.LocaleUtils;
+import com.colintmiller.simplenosql.NoSQL;
+import com.colintmiller.simplenosql.NoSQLEntity;
+import com.colintmiller.simplenosql.RetrievalCallback;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 /**
  * Created by Adam on 8/3/2014.
  */
 public class Favorites
 {
-	private static final String KEY_FAVORITES = "FAVORITES";
-
-	private static SharedPreferences getStorage( final Context context )
-	{
-		return PreferenceManager.getDefaultSharedPreferences( context.getApplicationContext() );
-	}
+	private static final String BUCKET_FAVORITES = "FAVORITES";
 
 	public static void addFavorite( final Locale locale, final Context context )
 	{
-		final SharedPreferences prefs = getStorage( context );
+		NoSQLEntity<Locale> entity = new NoSQLEntity<>( BUCKET_FAVORITES, locale.hashCode() + "" );
+		entity.setData( locale );
 
-		final Set<String> favorites = prefs.getStringSet( KEY_FAVORITES, new HashSet<String>() );
-		favorites.add( locale.toString() );
-		prefs.edit().putStringSet( KEY_FAVORITES, favorites ).commit();
+		NoSQL.with( context ).using( Locale.class ).save( entity );
 	}
 
 	public static void removeFavorite( final Locale locale, final Context context )
 	{
-		final SharedPreferences prefs = getStorage( context );
-
-		final Set<String> favorites = prefs.getStringSet( KEY_FAVORITES, new HashSet<String>() );
-		favorites.remove( locale.toString() );
-		prefs.edit().putStringSet( KEY_FAVORITES, favorites ).commit();
+		NoSQL.with( context ).using( Locale.class )
+		     .bucketId( BUCKET_FAVORITES )
+		     .entityId( locale.hashCode() + "" )
+		     .delete();
 	}
 
-	public static List<Locale> getFavorites( final Context context )
+	public static void getFavorites( final Context context, final RetrievalCallback<Locale> callback )
 	{
-		final SharedPreferences prefs = getStorage( context );
-
-		final Set<String> favoritesStrings = prefs.getStringSet( KEY_FAVORITES, new HashSet<String>() );
-		final List<Locale> favorites = new ArrayList<>( favoritesStrings.size() );
-
-		for( final String favoritesString : favoritesStrings )
-		{
-			final Locale locale = LocaleUtils.toLocale( favoritesString );
-			favorites.add( locale );
-		}
-
-		return favorites;
+		NoSQL.with( context ).using( Locale.class )
+		     .bucketId( BUCKET_FAVORITES )
+		     .retrieve( callback );
 	}
 }
