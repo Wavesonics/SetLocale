@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.darkrockstudios.apps.setlocale.BusProvider;
 import com.darkrockstudios.apps.setlocale.Favorites;
@@ -22,8 +23,6 @@ import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
 
 /**
  * Created by Adam on 8/3/2014.
@@ -74,7 +73,7 @@ public class LocaleListFragment extends Fragment implements AdapterView.OnItemCl
 		Locale locale = m_adapter.getItem( position );
 		if( LocaleUtil.setLocale( locale, getActivity() ) )
 		{
-			Crouton.makeText( getActivity(), R.string.toast_locale_set, Style.CONFIRM ).show();
+			Toast.makeText( getActivity(), R.string.toast_locale_set, Toast.LENGTH_SHORT ).show();
 		}
 	}
 
@@ -83,7 +82,7 @@ public class LocaleListFragment extends Fragment implements AdapterView.OnItemCl
 	{
 		final Locale locale = m_adapter.getItem( position );
 		Favorites.addFavorite( locale, getActivity() );
-		Crouton.makeText( getActivity(), R.string.toast_locale_favorite_added, Style.CONFIRM ).show();
+		Toast.makeText( getActivity(), R.string.toast_locale_favorite_added, Toast.LENGTH_SHORT ).show();
 
 		BusProvider.bus.post( new FavoritesUpdateEvent() );
 

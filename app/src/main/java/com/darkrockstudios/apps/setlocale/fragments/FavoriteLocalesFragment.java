@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.colintmiller.simplenosql.NoSQLEntity;
 import com.colintmiller.simplenosql.RetrievalCallback;
@@ -24,8 +25,6 @@ import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
 
 /**
  * Created by Adam on 8/3/2014.
@@ -84,7 +83,7 @@ public class FavoriteLocalesFragment extends Fragment implements AdapterView.OnI
 		Locale locale = m_adapter.getItem( position );
 		if( LocaleUtil.setLocale( locale, getActivity() ) )
 		{
-			Crouton.makeText( getActivity(), R.string.toast_locale_set, Style.CONFIRM ).show();
+			Toast.makeText( getActivity(), R.string.toast_locale_set, Toast.LENGTH_SHORT ).show();
 		}
 	}
 
@@ -93,7 +92,7 @@ public class FavoriteLocalesFragment extends Fragment implements AdapterView.OnI
 	{
 		final Locale locale = m_adapter.getItem( position );
 		Favorites.removeFavorite( locale, getActivity() );
-		Crouton.makeText( getActivity(), R.string.toast_locale_favorite_removed, Style.ALERT ).show();
+		Toast.makeText( getActivity(), R.string.toast_locale_favorite_removed, Toast.LENGTH_SHORT ).show();
 
 		Favorites.getFavorites( getActivity(), this );
 
