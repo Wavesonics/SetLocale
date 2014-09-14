@@ -89,10 +89,13 @@ public class LocaleAdapter extends ArrayAdapter<Locale> implements Filterable
 			ArrayList<Locale> filteredLocales = new ArrayList<>();
 
 			final String lowerCaseConstraint = constraint.toString().toLowerCase();
+			final String[] constraintComponents = lowerCaseConstraint.split( "\\s" );
+
 			for( final Locale locale : m_locales )
 			{
 				if( locale.toString().toLowerCase().contains( lowerCaseConstraint ) ||
-				    locale.getDisplayName().toLowerCase().contains( lowerCaseConstraint ) )
+				    locale.getDisplayName().toLowerCase().contains( lowerCaseConstraint ) ||
+				    matchComponents( locale, constraintComponents ) )
 				{
 					filteredLocales.add( locale );
 				}
@@ -102,6 +105,39 @@ public class LocaleAdapter extends ArrayAdapter<Locale> implements Filterable
 			results.values = filteredLocales;
 
 			return results;
+		}
+
+		private boolean matchComponents( final Locale locale, final String[] constraintComponents )
+		{
+			final boolean isMatch;
+
+			final String launguageCode = locale.getLanguage().toLowerCase();
+			final String countryCode = locale.getCountry().toLowerCase();
+
+			if( constraintComponents != null )
+			{
+				if( constraintComponents.length == 1 && !constraintComponents[ 0 ].isEmpty() )
+				{
+					isMatch = launguageCode.equals( constraintComponents[ 0 ] );
+				}
+				else if( constraintComponents.length == 2
+				         && !constraintComponents[ 0 ].isEmpty()
+				         && !constraintComponents[ 1 ].isEmpty() )
+				{
+					isMatch = launguageCode.equals( constraintComponents[ 0 ] )
+					          && countryCode.equals( constraintComponents[ 1 ] );
+				}
+				else
+				{
+					isMatch = false;
+				}
+			}
+			else
+			{
+				isMatch = false;
+			}
+
+			return isMatch;
 		}
 
 		@Override
