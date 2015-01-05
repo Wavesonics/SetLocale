@@ -11,11 +11,28 @@
               android:focusableInTouchMode="true"
               tools:context=".LocaleSelectActivity$PlaceholderFragment">
 
-    <EditText
-        android:id="@+id/SELECT_locale_search"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/SELECT_search_hint"/>
+        android:gravity="center">
+
+        <EditText
+            android:id="@+id/SELECT_locale_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/SELECT_search_hint"
+            android:inputType="textNoSuggestions"/>
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/clear_button"
+            android:id="@+id/clear_button"/>
+
+    </LinearLayout>
 
     <ListView
         android:id="@+id/SELECT_locale_list"

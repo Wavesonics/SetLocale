@@ -23,6 +23,7 @@ import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 /**
  * Created by Adam on 8/3/2014.
@@ -87,6 +88,15 @@ public class LocaleListFragment extends Fragment implements AdapterView.OnItemCl
 		BusProvider.bus.post( new FavoritesUpdateEvent() );
 
 		return true;
+	}
+
+	@OnClick(R.id.clear_button)
+	public void onClearClick()
+	{
+		if( m_searchView != null )
+		{
+			m_searchView.setText( "" );
+		}
 	}
 
 	private class SearchListener implements TextWatcher

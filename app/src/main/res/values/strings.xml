@@ -18,4 +18,5 @@
     <string name="toast_locale_favorite_removed">Removed locale from favorites</string>
 
     <string name="empty_favorites">Long press on a Locale to add it to your favorites</string>
+    <string name="clear_button">x</string>
 </resources>

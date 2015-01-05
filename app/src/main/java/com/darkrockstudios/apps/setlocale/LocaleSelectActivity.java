@@ -1,9 +1,9 @@
 package com.darkrockstudios.apps.setlocale;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 
 import com.darkrockstudios.apps.setlocale.adapters.SectionsPagerAdapter;
 
@@ -11,7 +11,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
-public class LocaleSelectActivity extends Activity
+public class LocaleSelectActivity extends ActionBarActivity
 {
 	private SectionsPagerAdapter m_sectionsPagerAdapter;
 
